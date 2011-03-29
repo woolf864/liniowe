@@ -46,29 +46,28 @@ ALL RIGHTS RESERVED
 ListMap::ListMap()
 {
     //first = NULL;
-    first = new Node(std::pair<Key,Val>(0,""));
-    first->prev = new Node(std::pair<Key,Val>(-1,""));
+    first = new Node(std::pair<Key,Val>(-1,"Inactive"));
     first->next = first;
+	first->prev = first;
 };
 
 ListMap::ListMap( const ListMap& m )
 {
-    first = new Node(std::pair<ListMap::Key,ListMap::Val>(0,""));
+    first = new Node(std::pair<ListMap::Key,ListMap::Val>(-1,"Inactive"));
     first->next = first;
     first->prev = first;
     if(!m.empty()) {
         iterator i = m.begin();
         //
         do {
-            i++;
-        } while(i != m.begin());
+			unsafe_insert(i.node->data);
+        } while(i != m.end());
     }
     ///@todo Zaimplementowaæ metode
 };
 
-ListMap::~ListMap()
-{
-    clear();
+ListMap::~ListMap(){
+	clear();
     delete first;
 };
 
@@ -94,8 +93,11 @@ std::pair<ListMap::iterator, bool> ListMap::insert(const std::pair<Key, Val>& en
 ListMap::iterator ListMap::unsafe_insert(const std::pair<Key, Val>& entry)
 {
     ///@todo Uzupe³niæ kod
-    assert(0);
-    return iterator(first);
+    Node *newNode;
+    newNode = new Node(entry, first, first->prev);
+    first->prev->next = newNode;
+    first->prev = newNode;
+    return iterator(first->prev);
 }
 
 // Zwraca iterator addresuj¹cy element w mapie dla którego klucz jest równy
@@ -103,7 +105,7 @@ ListMap::iterator ListMap::unsafe_insert(const std::pair<Key, Val>& entry)
 ListMap::iterator ListMap::find(const Key& k)
 {
     ///@todo Zaimplementowaæ metode
-    assert(0);
+    
     return end();
 }
 
@@ -128,15 +130,22 @@ ListMap::Val& ListMap::operator[](const Key& k)
 // Sprawdzenie czy mapa jest pusta.
 bool ListMap::empty( ) const
 {
-    return first==NULL;
+    return first->next == first;
 }
 
 // Zwraca iloœæ elementów w mapie.
 ListMap::size_type ListMap::size( ) const
 {
     ///@todo Zaimplementowaæ metode
-    assert(0);
-    return 0;
+    //assert(0);
+    //return 0;
+	//return count;
+	int j = 0;
+	iterator i = begin();
+	while(i++ != end()){
+		j++;
+	}
+	return j;
 }
 
 // Zwraza iloœæ elementów skojarzonych z kluczem key.
@@ -151,7 +160,12 @@ ListMap::size_type ListMap::count(const Key& _Key) const
 ListMap::iterator ListMap::erase(ListMap::iterator i)
 {
     ///@todo Zaimplementowaæ metode
-    assert(0);
+    if(i!=end()) {
+		i.node->next->prev = i.node->prev;
+		i.node->prev->next = i.node->next;
+		delete(i.node);
+		//i->prev->next = i;
+    }
     return end();
 }
 
@@ -163,7 +177,7 @@ ListMap::iterator ListMap::erase(ListMap::iterator i)
 ListMap::iterator ListMap::erase(ListMap::iterator f, ListMap::iterator l)
 {
     ///@todo Zaimplementowaæ metode
-    assert(0);
+    
     return end();
 }
 
@@ -181,12 +195,17 @@ ListMap::size_type ListMap::erase(const Key& key)
 void ListMap::clear( )
 {
     ///@todo Zaimplementowaæ meto
-//   ListNode *tmp;
-//   while( (tmp = &first->next) != end() ){
-    //TODO: ewentualnie zamienic na kasowanie tutaj
-//	   erase(tmp->data->first);
-//   }
+   if(first->next == first){
+	   return;
+   }
 
+   iterator i = begin();
+
+   do{
+		erase(i++);
+   }while(i!=end());
+
+   return;
 }
 
 // Porównanie strukturalne map.
@@ -197,7 +216,13 @@ bool ListMap::struct_eq(const ListMap& another) const
     ///@todo Zaimplementowaæ metode
     if(size() != another.size())
         return false;
-    return false;
+	iterator i = begin(),j = another.begin();
+	for(;i != end();++i,++j){
+		if(i.node->data.first != j.node->data.first){
+			return false;
+		}
+	}
+    return true;
 }
 
 // Porównanie informacyjne map.
@@ -249,28 +274,28 @@ ListMap::const_iterator ListMap::const_iterator::operator--(int)
 ListMap::iterator ListMap::begin()
 {
     ///@todo Zaimplementowaæ metode
-    return iterator(first);
+    return iterator(first->next);
 }
 
 /// Zwraca iterator addresuj¹cy pierwszy element w mapie.
 ListMap::const_iterator ListMap::begin() const
 {
     ///@todo Zaimplementowaæ metode
-    return iterator(first);
+    return iterator(first->next);
 }
 
 /// Zwraca iterator addresuj¹cy element za ostatnim w mapie.
 ListMap::iterator ListMap::end()
 {
     ///@todo Zaimplementowaæ metode
-    return iterator(first->prev);
+    return iterator(first);
 }
 
 /// Zwraca iterator addresuj¹cy element za ostatnim w mapie.
 ListMap::const_iterator ListMap::end() const
 {
     ///@todo Zaimplementowaæ metode
-    return iterator(first->prev);
+    return iterator(first);
 }
 
 //////////////////////////////////////////////////////////////////////////////
