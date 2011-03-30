@@ -1,3 +1,4 @@
+# test
 all : asd
 
 asd : asd.cc main.cc
