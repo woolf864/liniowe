@@ -1,4 +1,5 @@
 # test
+# test2
 all : asd
 
 asd : asd.cc main.cc
