@@ -189,7 +189,7 @@ ListMap::iterator ListMap::erase(ListMap::iterator f, ListMap::iterator l)
 {
     ///@todo Zaimplementowaæ metode
 	iterator i=f;
-	for(;i!=l&&i != end();i++)
+	for(;i!=l;i++)
 		erase(i);
     return i;
 }
