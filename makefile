@@ -1,6 +1,6 @@
 all : asd
 
-asd : asd.cc
+asd : asd.cc main.cc
 	clang++ asd.cc timer.cc main.cc -o asd 
 	
 del :

@@ -23,7 +23,6 @@ ALL RIGHTS RESERVED
 #include "/home/common/dyd/aisdi/liniowe/ListMap.h"
 #include "timer.h"
 #else
-#include "timer.h"
 #include "ListMap.h"
 #endif
 
@@ -40,8 +39,7 @@ int main()
    test();
    // Biblioteka z bardziej rygorystyczna wersja tych testow bedzie udostepniona na nastepnych zajeciach.
    czasstart = timer_start();
-   //Test2();
-   test();
+   Test2();
    czas = timer_stop( czasstart );
    std::cout << std::endl << "Czas wykonania Test2() : " << czas << " s." << std::endl;
    //system("PAUSE");
