@@ -88,7 +88,7 @@ std::pair<ListMap::iterator, bool> ListMap::insert(const std::pair<Key, Val>& en
             return std::make_pair(i, (bool)false);
     }
 
-    return std::make_pair(unsafe_insert(entry), (bool)false);
+    return std::make_pair(unsafe_insert(entry), (bool)true);
 }
 
 // Wstawienie elementu do mapy.
@@ -135,7 +135,7 @@ ListMap::Val& ListMap::operator[](const Key& k)
     ///@todo Zaimplementowaæ metode
     iterator i;
     i = find(k);
-    return i->second;
+    return i != end ? i->second : (unsafe_insert(make_pair(k,"")))->second;
 }
 
 // Sprawdzenie czy mapa jest pusta.
